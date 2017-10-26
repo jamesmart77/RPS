@@ -23,6 +23,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+
     <link rel="stylesheet" href="assets/css/style.css">
 
     <title>RPS</title>
@@ -32,6 +35,48 @@
 <body>
     <div class="container">
         <div class="title">Rock Paper Scissors</div>
+
+
+        <!-- user input section -->
+        <div class="row input-row">
+            <div class="col-md-5 user-input">
+                <div class="input-group">
+                    <input id="user-input" type="text" class="form-control" placeholder="Name...">
+                    <!-- add actor button -->
+                    <span class="input-group-btn">
+                        <button id="addActor-btn" class="btn btn-info" type="button">Join Game</button>
+                    </span>
+                </div>
+            </div>
+            <!-- display who's turn it is -->
+            <div class="col-md-5 player-turn"></div>
+        </div>
+
+        <div class="row">
+            <div class="panel panel-info">
+                <div class="page-header">
+                    <h4 class="player1-div">Player 1</h1>
+                </div>
+                <div class="panel-body">
+
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-body results">
+
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="page-header">
+                    <h4 class="player2-div">Player 2</h1>
+                </div>
+                <div class="panel-body">
+
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>
