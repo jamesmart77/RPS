@@ -1,5 +1,6 @@
 body {
     background-color: #333;
+    min-width: 450px;
 }
 
 .wrapper {
@@ -42,3 +43,48 @@ body {
     float: none;
 }
 
+.player1, .player2, .results{
+    width: 30%;
+    float: left;
+    margin: 10px 0;
+}
+
+.results{
+    margin: 10px 5%;
+    height: 130px;
+}
+.player2{
+    float: right;
+}
+
+.header{
+    font-weight: bold;
+    font-size: 26px;
+}
+
+.messages{
+    margin: 15px 0;
+}
+
+.messages-header{
+    padding: 0 10px;
+    margin-bottom: 5px;
+}
+
+#posted{
+    margin-bottom: 10px;
+    border: 1px solid #d9d9d9;
+    padding: 10px 5px;
+    border-radius: 5px;
+    max-height: 100px;
+    overflow: scroll;
+}
+
+hr{
+    margin: 5px -2px;
+}
+
+.send-btn{
+    margin-top: 10px;
+    float: right;
+}
