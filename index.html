@@ -56,10 +56,10 @@
         <div class="row input-row">
             <div class="col-md-5 user-input">
                 <div class="input-group">
-                    <input id="user-input" type="text" class="form-control" placeholder="Name...">
+                    <input id="playerName" type="text" class="form-control" placeholder="Name...">
                     <!-- add actor button -->
                     <span class="input-group-btn">
-                        <button id="addActor-btn" class="btn btn-info" type="button">Join Game</button>
+                        <button id="addActor-btn" class="btn btn-info" type="button" onclick="addPlayer()">Join Game</button>
                     </span>
                 </div>
             </div>
@@ -70,7 +70,7 @@
         <div class="row container">
             <div class="panel panel-info player1">
                 <div class="page-header text-center">
-                    <h4 class="header">Player 1</h1>
+                    <h4 class="header player1-head">Player 1</h1>
                 </div>
                 <div class="panel-body">
 
@@ -86,7 +86,7 @@
 
             <div class="panel panel-info player2">
                 <div class="page-header text-center">
-                    <h4 class="header">Player 2</h1>
+                    <h4 class="header player2-head">Player 2</h1>
                 </div>
                 <div class="panel-body">
 
@@ -101,7 +101,8 @@
                     <h4 class="header">Chat</h1>
                 </div>
                 <div class="panel-body">
-                    <div id="posted"><h5>Message History...</h5>
+                    <div id="posted">
+                        <h5>Message History...</h5>
                         <hr>
                     </div>
                     <textarea id="message" class="form-control" placeholder="Enter your message here..."></textarea>
@@ -111,7 +112,8 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="assets/js/firebase.js"></script>
+    <script type="text/javascript" src="assets/js/messages.js"></script>
+    <script type="text/javascript" src="assets/js/addPlayer.js"></script>
 </body>
 
 </html>

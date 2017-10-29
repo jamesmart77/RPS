@@ -8,8 +8,11 @@ var config = {
     messagingSenderId: "1082800212245"
 };
 firebase.initializeApp(config);
-
 var database = firebase.database();
+
+//----------------------------------------------
+//POST MESSAGES AREA
+//----------------------------------------------
 var messagesRef = database.ref("/messages");
 
 function postMessage() {
@@ -24,6 +27,8 @@ function postMessage() {
 
 }
 
+//listening for any new messages posted
+//will auto load when page loads
 messagesRef.on("child_added", function (snapshot) {
 
     let container = $("#posted");
@@ -38,3 +43,5 @@ messagesRef.on("child_added", function (snapshot) {
     container.scrollTop(container.prop("scrollHeight"));
     $("#message").val("");
 })
+//----------------------------------------------
+//----------------------------------------------
