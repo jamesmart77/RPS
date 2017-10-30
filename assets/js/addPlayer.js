@@ -2,15 +2,19 @@ var playersRef = database.ref("/players");
 var connectedRef = database.ref(".info/connected");
 var player
 var playerCount
+var playerQuery = firebase.database().ref("players").orderByKey();
+var activePlayers = []
+
 // --------------------------------------------------------------
 connectedRef.on("value", function (snap) {
 
     // If they are connected..
-    if (snap.val()) {
+    if (!snap.val()) {
 
         if (player !== undefined) {
             // Remove user from the connection list when they disconnect.
             player.onDisconnect().remove();
+            // player.onDisconnect().set("I disconnected")
         }
     }
 });
@@ -20,31 +24,13 @@ function addPlayer() {
     //get user name input
     var playerName = $("#playerName").val();
 
-    // database.ref().child("players").orderByChild("playerNum").equalTo("1").once("value", snapshot => {
-    //     const userData = snapshot.val();
-    //     if (userData) {
-    //         console.log("Player 1 exists!");
-    //     } else {
-    //         console.log("Player 1 does NOT exist!");
-    //     }
-    // });
-
-    // database.ref().child("players").orderByChild("playerNum").equalTo("2").once("value", snapshot => {
-    //     const userData = snapshot.val();
-    //     if (userData) {
-    //         console.log("Player 2 exists!");
-    //     } else {
-    //         console.log("Player 2 does NOT exist!");
-    //     }
-    // });
-
     //add player to database
     playersRef.once("value", function (snapshot) {
 
         //look at current number of players on app
         playerCount = snapshot.numChildren();
         let playerIndex
-        let existingPlayerNum
+        var existingPlayerNum
 
         //2 players only allowed
         if (playerCount < 2) {
@@ -54,13 +40,11 @@ function addPlayer() {
 
             } else if (playerCount === 1) {
 
-                playersRef.orderByChild("playerNum").once("value", function (snapshot) {
-                    existingPlayerNum = snapshot.val().playerNum;
-                });
+                existingPlayerNum = activePlayers[0];
 
                 //need better way to get existingPlayerNum
                 //this will cause issues if one player leaves and one remains and then another user wants to play previously existing user
-                if (existingPlayerNum === undefined) {
+                if (existingPlayerNum === 1) {
                     playerIndex = 2;
                 } else {
                     playerIndex = 1;
@@ -73,11 +57,11 @@ function addPlayer() {
                 playerName: playerName
             });
 
-            if (playerIndex === 1) {
-                $(".player1-head").text(playerName);
-            } else {
-                $(".player2-head").text(playerName);
-            }
+            // if (playerIndex === 1) {
+            //     $(".player1-head").text(playerName);
+            // } else {
+            //     $(".player2-head").text(playerName);
+            // }
 
             hideFormFields(); //
         } else {
@@ -92,6 +76,7 @@ playersRef.on("value", function (snapshot) {
 
     //look at current number of players on app
     playerCount = snapshot.numChildren();
+    activePlayers = [];//reset array to get latest
 
     if (playerCount >= 2) {
         hideFormFields();
@@ -106,6 +91,26 @@ playersRef.on("value", function (snapshot) {
         $(".game-full").css("display", "none");
     }
 
+    playerQuery.once("value")
+        .then(function (snap) {
+            snap.forEach(function (childSnapshot) {
+                var playerKey = childSnapshot.key;
+                var playerNumber = childSnapshot.val().playerNum;
+                var playerName = childSnapshot.val().playerName;
+
+                // console.log(playerKey)
+                console.log(playerNumber)
+
+                if (playerNumber === 1) {
+                    $(".player1-head").text(playerName);
+                } else if (playerNumber === 2) {
+                    $(".player2-head").text(playerName);
+                }
+
+                activePlayers.push(playerNumber);
+            })
+        });
+
 });
 
 function hideFormFields() {
@@ -117,19 +122,13 @@ function hideFormFields() {
     });
 }
 
+function checkExistingPlayer(){
 
-//listening for player changes and getting current player info
-database.ref("players").orderByChild("playerNum").on("value", function (snapshot) {
-
-    var query = firebase.database().ref("players").orderByKey();
-    query.once("value")
-        .then(function (snap) {
-            snap.forEach(function (childSnapshot) {
-                var playerKey = childSnapshot.key;
-                var playerData = childSnapshot.val();
-
-                // console.log(playerKey)
-                console.log(playerData.val().playerNum)
-            })
-        });
-});
+    activePlayers.forEach(function(element){
+        //if function is invoked, assumption is that
+        //only one value should be present in array
+        //max of two player numbers are allowed in db
+        
+        return element;//return first and only value
+    })    
+}
