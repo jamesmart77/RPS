@@ -44,8 +44,12 @@ body {
 }
 
 .game-full{
+    color: #fff;
     display: none;
+    text-align: center;
 }
+
+/* player panel section */
 .player1, .player2, .results{
     width: 30%;
     float: left;
@@ -60,11 +64,22 @@ body {
     float: right;
 }
 
+.page-header{
+    margin-bottom: 0px;
+}
+
 .header{
     font-weight: bold;
     font-size: 26px;
 }
 
+.btn-options{
+    display: block;
+    width: 75%;
+    margin: 5px auto;
+}
+
+/* messages sections */
 .messages{
     margin: 15px 0;
 }

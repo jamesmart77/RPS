@@ -1,28 +1,18 @@
 var playersRef = database.ref("/players");
-var connectedRef = database.ref(".info/connected");
-var player
 var playerCount
 var playerQuery = firebase.database().ref("players").orderByKey();
 var activePlayers = []
-
-// --------------------------------------------------------------
-connectedRef.on("value", function (snap) {
-
-    // If they are connected..
-    if (!snap.val()) {
-
-        if (player !== undefined) {
-            // Remove user from the connection list when they disconnect.
-            player.onDisconnect().remove();
-            // player.onDisconnect().set("I disconnected")
-        }
-    }
-});
+var currentPlayerName
+var player = {
+    key: "blank"
+}
 
 function addPlayer() {
 
+    isInitialLoad = false; //global variable for message notifications
+
     //get user name input
-    var playerName = $("#playerName").val();
+    currentPlayerName = $("#playerName").val();
 
     //add player to database
     playersRef.once("value", function (snapshot) {
@@ -40,10 +30,10 @@ function addPlayer() {
 
             } else if (playerCount === 1) {
 
+                //only two players are allowed in db so by default if 1 child exists
+                //take 1st index of activePlayers array
                 existingPlayerNum = activePlayers[0];
 
-                //need better way to get existingPlayerNum
-                //this will cause issues if one player leaves and one remains and then another user wants to play previously existing user
                 if (existingPlayerNum === 1) {
                     playerIndex = 2;
                 } else {
@@ -54,30 +44,25 @@ function addPlayer() {
             //available number (1 or 2)
             player = playersRef.push({
                 playerNum: playerIndex,
-                playerName: playerName
+                playerName: currentPlayerName
             });
 
-            // if (playerIndex === 1) {
-            //     $(".player1-head").text(playerName);
-            // } else {
-            //     $(".player2-head").text(playerName);
-            // }
-
             hideFormFields(); //
-        } else {
-            alert("Sorry, 2 people are already battling. You can join once one person leaves.")
+            addPlayerButtons(playerIndex);
         }
     });
 
     $("#playerName").val("");
 }
 
+//listening for player count updates
 playersRef.on("value", function (snapshot) {
 
     //look at current number of players on app
     playerCount = snapshot.numChildren();
-    activePlayers = [];//reset array to get latest
+    activePlayers = []; //reset array to get latest
 
+    //hide Join Game input form if 2 players join
     if (playerCount >= 2) {
         hideFormFields();
     } else {
@@ -94,19 +79,17 @@ playersRef.on("value", function (snapshot) {
     playerQuery.once("value")
         .then(function (snap) {
             snap.forEach(function (childSnapshot) {
-                var playerKey = childSnapshot.key;
                 var playerNumber = childSnapshot.val().playerNum;
                 var playerName = childSnapshot.val().playerName;
 
-                // console.log(playerKey)
-                console.log(playerNumber)
-
+                //update panel headers for player name
                 if (playerNumber === 1) {
                     $(".player1-head").text(playerName);
                 } else if (playerNumber === 2) {
                     $(".player2-head").text(playerName);
                 }
 
+                //add to array
                 activePlayers.push(playerNumber);
             })
         });
@@ -122,13 +105,24 @@ function hideFormFields() {
     });
 }
 
-function checkExistingPlayer(){
+function addPlayerButtons(playerNum) {
 
-    activePlayers.forEach(function(element){
-        //if function is invoked, assumption is that
-        //only one value should be present in array
-        //max of two player numbers are allowed in db
-        
-        return element;//return first and only value
-    })    
+    for (var i = 1; i < 4; i++) {
+
+        let btn = $("<button class='btn-options btn btn-warning btn-xs'>");
+        let btnDetails
+
+        if (i === 1) {
+            btnDetails = 'Rock'
+        } else if (i === 2) {
+            btnDetails = 'Paper'
+        } else {
+            btnDetails = 'Scissors'
+        }
+
+        btn.attr('data-type', btnDetails);
+        btn.html(btnDetails);
+        $(".body-" + playerNum).append(btn);
+    }
+
 }
