@@ -4,18 +4,32 @@ var initialQuery = database.ref("initialGame");
 //check if this is start of game with two new players
 function initialChecker() {
 
-    initialQuery.once("value")
-        .then(function (snap) {
-            snap.forEach(function (childSnapshot) {
-                var checkerVal = childSnapshot.val();//get initialGame flag value
+    // initialQuery.once("value")
+    //     .then(function (snap) {
+    //         snap.forEach(function (childSnapshot) {
+    //             var checkerVal = childSnapshot.val();//get initialGame flag value
 
-                //initial flag was true
-                if (checkerVal) {
-                    database.ref('initialGame/flag').set(false)//set flag to false
-                    startGame();//function below
-                }
-            })
-        });
+    //             //initial flag was true
+    //             if (checkerVal) {
+    //                 database.ref('initialGame/flag').set(false)//set flag to false
+    //                 startGame();//function below
+    //             }
+    //         })
+    //     });
+
+    //if player.key is not blank (meaning user is an active player)
+    playerQuery.once("value")
+    .then(function (snap) {
+        let childCount = snap.numChildren();
+
+        if(childCount = 2){
+            if(player.key !== "blank"){
+                $(".btn-key").removeClass('btn-options-invisible').addClass('btn-options-visible');
+                $(".game-updates").html("<p>Let's battle! Choose your weapon!</p>")
+            }
+        }
+
+    });
 }
 
 playersRef.on("child_changed", function (snapshot) {
@@ -47,22 +61,3 @@ playersRef.on("child_changed", function (snapshot) {
         alert("all false")
     }
 })
-
-//to start game, set player 1 turn to true
-function startGame() {
-
-    playerQuery.once("value")
-        .then(function (snap) {
-            snap.forEach(function (childSnapshot) {
-                var playerNumber = childSnapshot.val().playerNum;
-
-                if (playerNumber === 1) {
-                    database.ref("players/" + childSnapshot.key).update({myTurn: true});
-                    alert("player"+ playerNumber + " has been updated!")
-                }
-
-
-            })
-        });
-
-}

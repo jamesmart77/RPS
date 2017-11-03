@@ -73,8 +73,14 @@ body {
     font-size: 26px;
 }
 
-.btn-options{
+.btn-options-visible{
     display: block;
+    width: 75%;
+    margin: 5px auto;
+}
+
+.btn-options-invisible{
+    display: none;
     width: 75%;
     margin: 5px auto;
 }

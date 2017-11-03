@@ -66,22 +66,6 @@ playersRef.on("value", function (snapshot) {
     playerCount = snapshot.numChildren();
     activePlayers = []; //reset array to get latest
 
-    //hide Join Game input form if 2 players join
-    if (playerCount >= 2) {
-        hideFormFields();
-        initialChecker();
-        
-    } else {
-        $(".input-group").css({
-            "display": "table",
-            "margin": "0 auto",
-            "width": "60%",
-            "padding": "0",
-            "float": "none"
-        });
-        $(".game-full").css("display", "none");
-    }
-
     playerQuery.once("value")
         .then(function (snap) {
             snap.forEach(function (childSnapshot) {
@@ -100,11 +84,27 @@ playersRef.on("value", function (snapshot) {
             })
         });
 
+    //hide Join Game input form if 2 players join
+    if (playerCount >= 2) {
+        hideFormFields();
+        initialChecker();
+
+    } else {
+        $(".input-group").css({
+            "display": "table",
+            "margin": "0 auto",
+            "width": "60%",
+            "padding": "0",
+            "float": "none"
+        });
+        $(".game-updates").css("display", "none");
+    }
+
 });
 
 function hideFormFields() {
     $(".input-group").css("display", "none");
-    $(".game-full").css({
+    $(".game-updates").css({
         "display": "block",
         "color": "#fff",
         "text-align": "center"
@@ -115,7 +115,7 @@ function addPlayerButtons(playerNum) {
 
     for (var i = 1; i < 4; i++) {
 
-        let btn = $("<button class='btn-options btn btn-warning btn-xs'>");
+        let btn = $("<button class='btn-key btn-options-invisible btn btn-warning btn-xs'>");
         let btnDetails
 
         if (i === 1) {
@@ -126,7 +126,7 @@ function addPlayerButtons(playerNum) {
             btnDetails = 'Scissors'
         }
 
-        btn.attr('data-type', i);
+        btn.attr('data-integer', i);
         btn.html(btnDetails);
         $(".body-" + playerNum).append(btn);
     }
