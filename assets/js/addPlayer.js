@@ -44,10 +44,14 @@ function addPlayer() {
             //available number (1 or 2)
             player = playersRef.push({
                 playerNum: playerIndex,
-                playerName: currentPlayerName
+                playerName: currentPlayerName,
+                wins: 0,
+                losses: 0,
+                myTurn: false,
+                myAnswer: 0
             });
 
-            hideFormFields(); //
+            hideFormFields(); //needed here in case there's only one player
             addPlayerButtons(playerIndex);
         }
     });
@@ -65,6 +69,8 @@ playersRef.on("value", function (snapshot) {
     //hide Join Game input form if 2 players join
     if (playerCount >= 2) {
         hideFormFields();
+        initialChecker();
+        
     } else {
         $(".input-group").css({
             "display": "table",
@@ -120,7 +126,7 @@ function addPlayerButtons(playerNum) {
             btnDetails = 'Scissors'
         }
 
-        btn.attr('data-type', btnDetails);
+        btn.attr('data-type', i);
         btn.html(btnDetails);
         $(".body-" + playerNum).append(btn);
     }
