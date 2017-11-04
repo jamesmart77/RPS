@@ -47,7 +47,6 @@ function addPlayer() {
                 playerName: currentPlayerName,
                 wins: 0,
                 losses: 0,
-                myTurn: false,
                 myAnswer: 0
             });
 
