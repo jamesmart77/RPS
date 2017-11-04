@@ -6,18 +6,49 @@ TODO
 - present victor in results panel
 */
 var isFirstPassComplete = true;
+var winningAudio = document.createElement("audio");
+var losingAudio = document.createElement("audio");
+var nextRoundTime
+var intervalID
 
+winningAudio.setAttribute("src", "assets/audio/winningSound.mp3");
+losingAudio.setAttribute("src", "assets/audio/losingSound.mp3");
+
+//player 1 answer submit
 $(".body-1").on("click", ".btn-key", function () {
+    
+    hideButtons();
+
     database.ref("players/" + player.key).update({
         myAnswer: ($(this).data('integer'))
     })
 })
 
+//player 2 answer submit
 $(".body-2").on("click", ".btn-key", function () {
+    
+    hideButtons();
+
     database.ref("players/" + player.key).update({
         myAnswer: $(this).data('integer')
     })
 })
+
+//hide active player option buttons
+function hideButtons(){
+    if(player.key !== "blank"){
+        //make active players buttons visible
+        $(".btn-key").removeClass('btn-options-visible').addClass('btn-options-invisible-round');
+    } 
+}
+
+//show active player option buttons
+function showButtons(){
+    if(player.key !== "blank"){
+        //make active players buttons visible
+        $(".btn-key").removeClass('btn-options-invisible-round').addClass('btn-options-visible');
+    } 
+}
 
 
 playersRef.on("child_changed", function (snapshot) {
@@ -74,6 +105,7 @@ playersRef.on("child_changed", function (snapshot) {
 
                 })
 
+                //SCORING LOGIC
                 //two players and both answers must not be 0 (default)
                 if (numberOfPlayers === 2 && playerOneInfo.answer !== 0 && playerTwoInfo.answer !== 0) {
                     if (playerOneInfo.answer === 1 && playerTwoInfo.answer === 2) { //rock vs paper
@@ -141,8 +173,45 @@ playersRef.on("child_changed", function (snapshot) {
 
 function updateScores(playerOneInfo, playerTwoInfo) {
 
+    //boolean prevents constant loop for child_updated
+    //only want to update the wins/losses per submission
     isFirstPassComplete = false;
-    
+
+    //clear previous results img
+    $(".body-results").empty();
+
+    waitingForNextRound();
+
+    //get loss & win images
+    let lossImg = $("<img class='results-img'>").attr({
+        src: "assets/images/loser.png"
+    })
+
+    let winImg = $("<img class='results-img'>").attr({
+        src: "assets/images/victory.png"
+    })
+
+    //post corresponding img per active player
+    if (currentPlayerNumber === 1) {
+        if (playerOneInfo.losses === 1) {
+            $(".body-results").append(lossImg);
+            losingAudio.play();
+        } else {
+            $(".body-results").append(winImg);
+            winningAudio.play();
+        }
+    }
+
+    if (currentPlayerNumber === 2) {
+        if (playerTwoInfo.losses === 1) {
+            $(".body-results").append(lossImg);
+            losingAudio.play();
+        } else {
+            $(".body-results").append(winImg);
+            winningAudio.play();
+        }
+    }
+
     database.ref("players/" + playerOneInfo.key).update({
         losses: playerOneInfo.existingLossses + playerOneInfo.losses,
         wins: playerOneInfo.existingWins + playerOneInfo.wins
@@ -152,5 +221,62 @@ function updateScores(playerOneInfo, playerTwoInfo) {
         losses: playerTwoInfo.existingLossses + playerTwoInfo.losses
     })
 
+    
+
     isFirstPassComplete = true;
 }
+
+function waitingForNextRound() {
+    //set time for 4 seconds
+
+    $(".body-results").append("<div class='time-remaining text-center'></div>")
+    nextRoundTime = 4;
+
+    intervalID = setInterval(timeToNextQuestion, 1000);
+}
+
+function timeToNextQuestion() {
+    //decrement by 1
+    let timeLeft = nextRoundTime--;
+
+    //print time remaining
+    if (timeLeft > 0) {
+        $(".time-remaining").html("Next question in: <b>" + timeLeft + "</b>");
+    } else {
+        clearInterval(intervalID);
+        $(".body-results").empty();
+
+        let roundImg = $("<img class='results-img'>").attr({
+            src: "assets/images/gameOn.png"
+        })
+
+        $(".body-results").append(roundImg);
+        showButtons();
+
+    }
+}
+
+//listening to update player stats
+playersRef.on("value", function (snapshot) {
+
+    //look at current number of players on app
+    playerCount = snapshot.numChildren();
+
+    if (playerCount === 2) {
+
+        playerQuery.once("value")
+            .then(function (snap) {
+                snap.forEach(function (childSnapshot) {
+                    var playerWins = childSnapshot.val().wins;
+                    var playerLosses = childSnapshot.val().losses;
+                    var playerNumber = childSnapshot.val().playerNum;
+
+                    //update panel headers for player name
+                    if (playerNumber === currentPlayerNumber) {
+                        $(".win-stats").text(playerWins);
+                        $(".loss-stats").text(playerLosses);
+                    }
+                })
+            });
+    }
+});

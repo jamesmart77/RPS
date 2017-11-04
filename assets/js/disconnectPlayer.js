@@ -1,23 +1,17 @@
-//var connectedRef = database.ref(".info/connected");
-// --------------------------------------------------------------
-// connectedRef.on("value", function (snap) {
-
-//     // If they are connected..
-//     if (snap.val()) {
-    
-//         // Remove user from the connection list when they disconnect.
-//         if (player.key !== 'blank') {
-//             database.ref("players/" + player.key).onDisconnect().update({
-//                 playerName: 'empty'
-//             })
-//             // player.onDisconnect().remove();
-//         }
-//     }
-// });
-
+//remove current player from firebase
 $(window).unload(function () {
     if (player.key !== 'blank') {
         database.ref("players/" + player.key).remove()
         // player.onDisconnect().remove();
     }
 });
+
+//update panels with open slot
+playersRef.on("child_removed", function(){
+    if(currentPlayerNumber === 1){
+        $(".player2-head").text("Slot 2 is Open");
+    } else {
+        $(".player1-head").text("Slot 1 is Open");
+    }
+
+})

@@ -7,8 +7,10 @@ body {
     margin: 15px;
 }
 
+
 /* row holds user input and actor pills */
-.title{
+
+.title {
     /* max-width: 1060px; */
     width: 100%;
     margin: 10px auto;
@@ -23,7 +25,9 @@ body {
     border-bottom: 5px solid #4aaaa5;
 }
 
+
 /* row holds user input and actor pills */
+
 .input-row {
     /* max-width: 1060px; */
     width: 100%;
@@ -34,7 +38,9 @@ body {
     align-items: center;
 }
 
+
 /* user input element */
+
 .user-input {
     margin: 0 auto;
     /* max-width: 1060px; */
@@ -43,59 +49,92 @@ body {
     float: none;
 }
 
-.game-full{
+.game-updates {
     color: #fff;
     display: none;
     text-align: center;
 }
 
+
 /* player panel section */
-.player1, .player2, .results{
+
+.player1,
+.player2,
+.results {
     width: 30%;
     float: left;
     margin: 10px 0;
 }
 
-.results{
-    margin: 10px 5%;
-    height: 130px;
-}
-.player2{
+.player2 {
     float: right;
 }
 
-.page-header{
-    margin-bottom: 0px;
+.page-header {
+    margin: 15px 0 0px;
+    padding-bottom: 0px;
 }
 
-.header{
+.header {
     font-weight: bold;
     font-size: 26px;
 }
 
-.btn-options-visible{
+
+/* active player option buttons */
+
+.btn-options-visible {
     display: block;
     width: 75%;
     margin: 5px auto;
 }
 
-.btn-options-invisible{
+.btn-options-invisible {
     display: none;
     width: 75%;
     margin: 5px auto;
 }
 
+.btn-options-invisible-round {
+    display: none;
+    width: 75%;
+    margin: 5px auto;
+}
+
+
+/* wins/losses  */
+
+.stat {
+    margin: 10px auto 0;
+    width: 75%;
+}
+
+
+/* img in results panel */
+
+.results {
+    margin: 10px 5%;
+    min-height: 86px;
+    max-height: 237px;
+}
+
+.results-img {
+    width: 100%;
+}
+
+
 /* messages sections */
-.messages{
+
+.messages {
     margin: 15px 0;
 }
 
-.messages-header{
+.messages-header {
     padding: 0 10px;
     margin-bottom: 5px;
 }
 
-#posted{
+#posted {
     margin-bottom: 10px;
     border: 1px solid #d9d9d9;
     padding: 10px 5px;
@@ -104,11 +143,11 @@ body {
     overflow: scroll;
 }
 
-hr{
+hr {
     margin: 5px -2px;
 }
 
-.send-btn{
+.send-btn {
     margin-top: 10px;
     float: right;
 }

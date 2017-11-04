@@ -3,6 +3,7 @@ var playerCount
 var playerQuery = firebase.database().ref("players").orderByKey();
 var activePlayers = []
 var currentPlayerName
+var currentPlayerNumber
 var player = {
     key: "blank"
 }
@@ -19,14 +20,14 @@ function addPlayer() {
 
         //look at current number of players on app
         playerCount = snapshot.numChildren();
-        let playerIndex
+        
         var existingPlayerNum
 
         //2 players only allowed
         if (playerCount < 2) {
             if (playerCount === 0) {
                 // Add user to the connections list.
-                playerIndex = 1;
+                currentPlayerNumber = 1;
 
             } else if (playerCount === 1) {
 
@@ -35,15 +36,15 @@ function addPlayer() {
                 existingPlayerNum = activePlayers[0];
 
                 if (existingPlayerNum === 1) {
-                    playerIndex = 2;
+                    currentPlayerNumber = 2;
                 } else {
-                    playerIndex = 1;
+                    currentPlayerNumber = 1;
                 }
             }
             //if player spot is open, add player and assign the next
             //available number (1 or 2)
             player = playersRef.push({
-                playerNum: playerIndex,
+                playerNum: currentPlayerNumber,
                 playerName: currentPlayerName,
                 wins: 0,
                 losses: 0,
@@ -51,7 +52,7 @@ function addPlayer() {
             });
 
             hideFormFields(); //needed here in case there's only one player
-            addPlayerButtons(playerIndex);
+            addPlayerButtons(currentPlayerNumber);
         }
     });
 
@@ -110,6 +111,7 @@ function hideFormFields() {
     });
 }
 
+//RPS option buttons inserted for active player
 function addPlayerButtons(playerNum) {
 
     for (var i = 1; i < 4; i++) {
@@ -129,5 +131,24 @@ function addPlayerButtons(playerNum) {
         btn.html(btnDetails);
         $(".body-" + playerNum).append(btn);
     }
+
+    addStats(playerNum);
+
+}
+
+//wins/loss stats inserted
+function addStats(playerNum) {
+
+    var Stat = $("<div class='stat'>");
+    var winStat = $("<p>");
+    var lossStat = $("<p>");
+
+    winStat.html("<b>Wins: </b><span class='win-stats'></span>");
+    lossStat.html("<b>Losses: </b><span class='loss-stats'></span>");
+
+    Stat.append(winStat);
+    Stat.append(lossStat);
+
+    $(".body-" + playerNum).append(Stat);
 
 }
