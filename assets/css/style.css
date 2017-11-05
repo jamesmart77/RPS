@@ -111,11 +111,13 @@ body {
 
 
 /* img in results panel */
-
+.body-results{
+    padding: 5px;
+}
 .results {
     margin: 10px 5%;
     min-height: 86px;
-    max-height: 237px;
+    max-height: 216px;
 }
 
 .results-img {

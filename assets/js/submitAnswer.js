@@ -117,50 +117,46 @@ playersRef.on("child_changed", function (snapshot) {
                         //database.ref("players/" + playerTwoInfo.key).set({wins: playerTwoInfo.wins + 1})
                     } else if (playerOneInfo.answer === 1 && playerTwoInfo.answer === 3) { //rock vs scissors
                         //player 1 wins
-                        database.ref("players/" + playerOneInfo.key).update({
-                            wins: playerOneInfo.wins + 1
-                        })
-                        database.ref("players/" + playerTwoInfo.key).update({
-                            losses: playerTwoInfo.losses + 1
-                        })
+                        
+                        playerOneInfo.wins = 1;
+                        playerTwoInfo.losses = 1;
+                        updateScores(playerOneInfo, playerTwoInfo)
+
                     } else if (playerOneInfo.answer === 1 && playerTwoInfo.answer === 1) { //rock vs rock
                         //tie
+                        updateScores(playerOneInfo, playerTwoInfo)
                     } else if (playerOneInfo.answer === 2 && playerTwoInfo.answer === 1) { //paper vs rock
                         //player 1 wins
-                        database.ref("players/" + playerOneInfo.key).update({
-                            wins: playerOneInfo.wins + 1
-                        })
-                        database.ref("players/" + playerTwoInfo.key).update({
-                            losses: playerTwoInfo.losses + 1
-                        })
+                        
+                        playerOneInfo.wins = 1;
+                        playerTwoInfo.losses = 1;
+                        updateScores(playerOneInfo, playerTwoInfo)
+
                     } else if (playerOneInfo.answer === 2 && playerTwoInfo.answer === 2) { //paper vs paper
                         //tie
+                        updateScores(playerOneInfo, playerTwoInfo)
                     } else if (playerOneInfo.answer === 2 && playerTwoInfo.answer === 3) { //paper vs scissors
                         //player 2 wins
-                        database.ref("players/" + playerOneInfo.key).update({
-                            losses: playerOneInfo.losses + 1
-                        })
-                        database.ref("players/" + playerTwoInfo.key).update({
-                            wins: playerTwoInfo.wins + 1
-                        })
+                        playerOneInfo.losses = 1;
+                        playerTwoInfo.wins = 1;
+                        updateScores(playerOneInfo, playerTwoInfo)
+
                     } else if (playerOneInfo.answer === 3 && playerTwoInfo.answer === 1) { //scissors vs rock
                         //player 2 wins
-                        database.ref("players/" + playerOneInfo.key).update({
-                            losses: playerOneInfo.losses + 1
-                        })
-                        database.ref("players/" + playerTwoInfo.key).update({
-                            wins: playerTwoInfo.wins + 1
-                        })
+                        playerOneInfo.losses = 1;
+                        playerTwoInfo.wins = 1;
+                        updateScores(playerOneInfo, playerTwoInfo)
+
                     } else if (playerOneInfo.answer === 3 && playerTwoInfo.answer === 2) { //scissors vs paper
                         //player 1 wins
-                        database.ref("players/" + playerOneInfo.key).update({
-                            wins: playerOneInfo.wins + 1
-                        })
-                        database.ref("players/" + playerTwoInfo.key).update({
-                            losses: playerTwoInfo.losses + 1
-                        })
+                        
+                        playerOneInfo.wins = 1;
+                        playerTwoInfo.losses = 1;
+                        updateScores(playerOneInfo, playerTwoInfo)
+
                     } else if (playerOneInfo.answer === 3 && playerTwoInfo.answer === 3) { //scissors vs scissors
                         //tie
+                        updateScores(playerOneInfo, playerTwoInfo)
                     }
 
                     database.ref("players/" + player.key).update({
@@ -196,9 +192,11 @@ function updateScores(playerOneInfo, playerTwoInfo) {
         if (playerOneInfo.losses === 1) {
             $(".body-results").append(lossImg);
             losingAudio.play();
-        } else {
+        } else if (playerOneInfo.wins === 1){
             $(".body-results").append(winImg);
             winningAudio.play();
+        } else{
+            $(".body-results").append("<p><b>TIE!</b></p>")
         }
     }
 
@@ -206,9 +204,11 @@ function updateScores(playerOneInfo, playerTwoInfo) {
         if (playerTwoInfo.losses === 1) {
             $(".body-results").append(lossImg);
             losingAudio.play();
-        } else {
+        } else if (playerOneInfo.wins === 1){
             $(".body-results").append(winImg);
             winningAudio.play();
+        } else{
+            $(".body-results").append("<p><b>TIE!</b></p>")
         }
     }
 
