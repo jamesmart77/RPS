@@ -204,7 +204,7 @@ function updateScores(playerOneInfo, playerTwoInfo) {
         if (playerTwoInfo.losses === 1) {
             $(".body-results").append(lossImg);
             losingAudio.play();
-        } else if (playerOneInfo.wins === 1){
+        } else if (playerTwoInfo.wins === 1){
             $(".body-results").append(winImg);
             winningAudio.play();
         } else{
